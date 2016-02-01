@@ -14,7 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-
 package main
 
 import (
@@ -22,7 +21,7 @@ import (
 
 	flag "github.com/spf13/pflag"
 
-	"github.com/pupapaik/contrail-kubernetes/cmd/kube-network-manager/app"
+	"github.com/Juniper/contrail-kubernetes/cmd/kube-network-manager/app"
 )
 
 func main() {
