@@ -22,4 +22,4 @@ install:
 
 script:
   - gocov test -v ./... > coverage.json
-  - ${HOME}/gopath/bin/goveralls  -gocovdata=coverage.json -service=travis-ci -repotoken=${COVERALLS_TOKEN} --ignore-errors
+  - ${HOME}/gopath/bin/goveralls  -gocovdata=coverage.json -service=travis-ci -repotoken=${COVERALLS_TOKEN}

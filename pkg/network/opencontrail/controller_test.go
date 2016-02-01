@@ -291,7 +291,7 @@ func TestNamespaceDelete(t *testing.T) {
 	}
 
 	project := new(types.Project)
-	project.SetFQName("domain", []string{DefaultDomain, "netns"})
+	project.SetFQName("domain", []string{controller.config.DefaultDomain, "netns"})
 	project.SetUuid(string(namespace.ObjectMeta.UID))
 	client.Create(project)
 
