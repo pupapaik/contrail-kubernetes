@@ -30,7 +30,7 @@ import (
 )
 
 const (
-	DefaultDomain        = "default-domain"
+	// DefaultDomain        = "default-domain"
 	DefaultServiceSubnet = "10.254.0.0/16"
 )
 
