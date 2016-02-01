@@ -72,14 +72,14 @@ func NewTestController(kube kubeclient.Interface, client contrail.ApiClient, all
 	} else {
 		controller.allocator = allocator
 	}
-	controller.instanceMgr = NewInstanceManager(client, controller.allocator)
+	controller.instanceMgr = NewInstanceManager(client, controller.config, controller.allocator)
 	if networkMgr == nil {
 		controller.networkMgr = NewNetworkManager(client, controller.config)
 	} else {
 		controller.networkMgr = networkMgr
 	}
 	controller.serviceMgr = NewServiceManager(client, controller.config, controller.networkMgr)
-	controller.namespaceMgr = NewNamespaceManager(client)
+	controller.namespaceMgr = NewNamespaceManager(client, controller.config)
 	return controller
 }
 
