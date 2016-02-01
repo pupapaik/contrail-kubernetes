@@ -20,7 +20,7 @@ import (
 	"fmt"
 	"testing"
 
-	"code.google.com/p/go-uuid/uuid"
+	"github.com/pborman/uuid"
 	"github.com/golang/glog"
 	"github.com/stretchr/testify/assert"
 

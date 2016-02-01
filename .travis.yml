@@ -11,7 +11,10 @@ install:
   - tar -zxvf contrail-go-api-generated-types-r2.20.tar.gz -C ${GOPATH}/src
   - mkdir -p ${GOPATH}/src/k8s.io
   - (cd ${GOPATH}/src/k8s.io && git clone https://github.com/kubernetes/kubernetes.git -b v1.1.1)
-  - go get code.google.com/p/go-uuid/uuid
+  - go get github.com/pborman/uuid
+  # Workaround rename of uuid for dependency components
+  - mkdir -p ${GOPATH}/src/code.google.com/p/go-uuid
+  - git clone https://github.com/pborman/uuid.git ${GOPATH}/src/code.google.com/p/go-uuid/uuid
   - go get golang.org/x/tools/cmd/cover
   - go get github.com/axw/gocov/gocov
   - go get github.com/mattn/goveralls
