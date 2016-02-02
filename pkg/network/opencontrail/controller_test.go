@@ -2126,7 +2126,7 @@ func TestDomainVariable(t *testing.T) {
 
 	controller := NewTestController(kube, client, allocator, nil)
 
-	controller.confi.DefaultDomain = "test-domain"
+	controller.config.DefaultDomain = "test-domain"
 
 	pod1 := &api.Pod{
 		ObjectMeta: api.ObjectMeta{
@@ -2167,7 +2167,7 @@ func TestDomainVariable(t *testing.T) {
 	}
 
 	netnsProject := new(types.Project)
-	netnsProject.SetFQName("", []string{controller.confi.DefaultDomain, "testns"})
+	netnsProject.SetFQName("", []string{controller.config.DefaultDomain, "testns"})
 	client.Create(netnsProject)
 
 	allocator.On("LocateIpAddress", string(pod1.ObjectMeta.UID)).Return("10.0.0.1", nil)
