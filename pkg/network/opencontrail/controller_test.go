@@ -2137,9 +2137,6 @@ func TestDomainVariable(t *testing.T) {
 
 	client := createTestClient()
 
-	client.AddInterceptor("virtual-machine-interface", &VmiInterceptor{})
-	client.AddInterceptor("virtual-network", &NetworkInterceptor{})
-
 	controller := NewTestController(kube, client, nil, nil)
 
 	controller.config.DefaultDomain = "test-domain"
