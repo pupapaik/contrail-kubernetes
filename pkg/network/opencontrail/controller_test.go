@@ -2113,6 +2113,35 @@ func TestServiceBeforeNamespace(t *testing.T) {
 	assert.NoError(t, err)
 }
 
+
+func NewTestControllerWithCustomDomain(kube kubeclient.Interface, client contrail.ApiClient, allocator AddressAllocator, networkMgr NetworkManager) *Controller {
+	controller := new(Controller)
+	controller.serviceStore = cache.NewStore(testKeyFunc)
+	controller.eventChannel = make(chan notification, 32)
+	controller.kube = kube
+	controller.config.DefaultDomain = "test-domain"
+
+	controller.config = NewConfig()
+	controller.config.PublicSubnet = "100.64.0.0/10"
+
+	controller.client = client
+	if allocator == nil {
+		controller.allocator = NewAddressAllocator(client, controller.config)
+	} else {
+		controller.allocator = allocator
+	}
+	controller.instanceMgr = NewInstanceManager(client, controller.config, controller.allocator)
+	if networkMgr == nil {
+		controller.networkMgr = NewNetworkManager(client, controller.config)
+	} else {
+		controller.networkMgr = networkMgr
+	}
+	controller.serviceMgr = NewServiceManager(client, controller.config, controller.networkMgr)
+	controller.namespaceMgr = NewNamespaceManager(client, controller.config)
+	return controller
+}
+
+
 func TestDomainVariable(t *testing.T) {
 	kube := mocks.NewKubeClient()
 
@@ -2124,7 +2153,7 @@ func TestDomainVariable(t *testing.T) {
 
 	allocator := new(mocks.AddressAllocator)
 
-	controller := NewTestController(kube, client, allocator, nil)
+	controller := NewTestControllerWithCustomDomain(kube, client, allocator, nil)
 
 	controller.config.DefaultDomain = "test-domain"
 
