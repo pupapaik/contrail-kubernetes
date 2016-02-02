@@ -5,7 +5,7 @@ env:
 
 install:
   - mkdir -p ${GOPATH}/src/github.com/Juniper
-  - ln -s ${TRAVIS_BUILD_DIR} ${GOPATH}/src/github.com/Juniper/
+#  - ln -s ${TRAVIS_BUILD_DIR} ${GOPATH}/src/github.com/Juniper/
   - (cd ${GOPATH}/src/github.com/Juniper && git clone https://github.com/Juniper/contrail-go-api -b 1.0.0)
   - wget https://github.com/Juniper/contrail-go-api/releases/download/1.0.0/contrail-go-api-generated-types-r2.20.tar.gz
   - tar -zxvf contrail-go-api-generated-types-r2.20.tar.gz -C ${GOPATH}/src
