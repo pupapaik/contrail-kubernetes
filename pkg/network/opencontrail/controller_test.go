@@ -2119,9 +2119,9 @@ func NewTestControllerWithCustomDomain(kube kubeclient.Interface, client contrai
 	controller.serviceStore = cache.NewStore(testKeyFunc)
 	controller.eventChannel = make(chan notification, 32)
 	controller.kube = kube
-	controller.config.DefaultDomain = "test-domain"
 
 	controller.config = NewConfig()
+	controller.config.DefaultDomain = "test-domain"
 	controller.config.PublicSubnet = "100.64.0.0/10"
 
 	controller.client = client
