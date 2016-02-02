@@ -2132,19 +2132,15 @@ func TestServiceBeforeNamespace(t *testing.T) {
 	assert.NoError(t, err)
 }
 
-
 func TestDomainVariable(t *testing.T) {
 	kube := mocks.NewKubeClient()
 
-	client := new(contrail_mocks.ApiClient)
-	client.Init()
+	client := createTestClient()
 
 	client.AddInterceptor("virtual-machine-interface", &VmiInterceptor{})
 	client.AddInterceptor("virtual-network", &NetworkInterceptor{})
 
-	allocator := new(mocks.AddressAllocator)
-
-	controller := NewTestController(kube, client, allocator, nil)
+	controller := NewTestController(kube, client, nil, nil)
 
 	controller.config.DefaultDomain = "test-domain"
 
@@ -2190,12 +2186,6 @@ func TestDomainVariable(t *testing.T) {
 	netnsProject := new(types.Project)
 	netnsProject.SetFQName("", []string{controller.config.DefaultDomain, "testns"})
 	client.Create(netnsProject)
-
-	allocator.On("LocateIpAddress", string(pod1.ObjectMeta.UID)).Return("10.0.0.1", nil)
-	allocator.On("LocateIpAddress", string(pod2.ObjectMeta.UID)).Return("10.0.0.2", nil)
-
-	allocator.On("ReleaseIpAddress", string(pod1.ObjectMeta.UID)).Return()
-	allocator.On("ReleaseIpAddress", string(pod2.ObjectMeta.UID)).Return()
 
 	kube.PodInterface.On("Update", pod1).Return(pod1, nil)
 	kube.PodInterface.On("Update", pod2).Return(pod2, nil)
