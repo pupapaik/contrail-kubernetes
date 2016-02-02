@@ -2166,6 +2166,7 @@ func TestDomainVariable(t *testing.T) {
 		},
 	}
 
+	glog.Infof("Domain name is %s", controller.config.DefaultDomain)
 	netnsProject := new(types.Project)
 	netnsProject.SetFQName("", []string{controller.config.DefaultDomain, "testns"})
 	client.Create(netnsProject)
