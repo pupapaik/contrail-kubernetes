@@ -39,8 +39,8 @@ func NewInstanceManager(client contrail.ApiClient, config *Config, allocator Add
 	return manager
 }
 
-func instanceFQName(tenant, defaultDomain, podName string) []string {
-	fqn := []string{defaultDomain, tenant, podName}
+func instanceFQName(domain, tenant, podName string) []string {
+	fqn := []string{domain, tenant, podName}
 	return fqn
 }
 
