@@ -2195,65 +2195,6 @@ func TestDomainVariable(t *testing.T) {
 	controller.AddService(service)
 	time.Sleep(100 * time.Millisecond)
 
-	policy, err := types.NetworkPolicyByName(client, "test-domain:testns:x1")
-	policyId := policy.GetUuid()
-	assert.NoError(t, err)
-
-	serviceNet, err := types.VirtualNetworkByName(client, "test-domain:testns:service-x1")
-	assert.NoError(t, err)
-
-	poRefs, err := serviceNet.GetNetworkPolicyRefs()
-	if assert.NoError(t, err) && assert.NotEmpty(t, poRefs) {
-		assert.Equal(t, policy.GetUuid(), poRefs[0].Uuid)
-	}
-
-	controller.AddPod(pod2)
-	time.Sleep(100 * time.Millisecond)
-
-	clientNet, err := types.VirtualNetworkByName(client, "test-domain:testns:client")
-	assert.NoError(t, err)
-
-	clientRefs, err := clientNet.GetNetworkPolicyRefs()
-	if assert.NoError(t, err) && assert.NotEmpty(t, clientRefs) {
-		assert.Equal(t, policy.GetUuid(), clientRefs[0].Uuid)
-	}
-
-	policy, err = types.NetworkPolicyByName(client, "test-domain:testns:x1")
-	if err == nil {
-		assert.Len(t, policy.GetNetworkPolicyEntries().PolicyRule, 1)
-		assert.True(t, policyHasRule(policy, "test-domain:testns:client", "test-domain:testns:service-x1"))
-	}
-
-	controller.DeleteService(service)
-	time.Sleep(100 * time.Millisecond)
-
-	_, err = client.FindByName("virtual-network", "test-domain:testns:service-x1")
-	assert.Error(t, err)
-
-	policy, err = types.NetworkPolicyByName(client, "test-domain:testns:x1")
-	assert.NoError(t, err)
-	if err == nil {
-		assert.Equal(t, policyId, policy.GetUuid())
-		refs, err := policy.GetVirtualNetworkBackRefs()
-		assert.NoError(t, err)
-		assert.Len(t, refs, 1)
-		assert.Len(t, policy.GetNetworkPolicyEntries().PolicyRule, 0)
-	}
-
-	controller.AddService(service)
-	time.Sleep(100 * time.Millisecond)
-
-	policy, err = types.NetworkPolicyByName(client, "test-domain:testns:x1")
-	assert.NoError(t, err)
-	if err == nil {
-		assert.Equal(t, policyId, policy.GetUuid())
-		refs, err := policy.GetVirtualNetworkBackRefs()
-		assert.NoError(t, err)
-		assert.Len(t, refs, 2)
-		assert.Len(t, policy.GetNetworkPolicyEntries().PolicyRule, 1)
-		assert.True(t, policyHasRule(policy, "test-domain:testns:client", "test-domain:testns:service-x1"))
-	}
-
 	controller.DeleteService(service)
 	controller.DeletePod(pod1)
 	controller.DeletePod(pod2)
@@ -2263,6 +2204,4 @@ func TestDomainVariable(t *testing.T) {
 	}
 	shutdown <- shutdownMsg{}
 
-	_, err = types.NetworkPolicyByName(client, "test-domain:testns:x1")
-	assert.Error(t, err)
 }
