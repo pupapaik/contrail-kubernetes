@@ -205,6 +205,17 @@ func (m *NetworkManagerImpl) LocateNetwork(project, name, subnet string) (*types
 
 func (m *NetworkManagerImpl) ReleaseNetworkIfEmpty(namespace, name string) (bool, error) {
 	fqn := []string{m.config.DefaultDomain, namespace, name}
+
+	obj, err := m.client.FindByName("domain",  m.config.DefaultDomain)
+	if err == nil {
+		return obj.(*types.Domain)
+	}
+	domain := new(types.Domain)
+	err = m.client.Create(domain)
+	if err != nil {
+		glog.Errorf("Create domain %s: %v", name, err)
+	}
+
 	obj, err := m.client.FindByName("virtual-network", strings.Join(fqn, ":"))
 	if err != nil {
 		glog.Errorf("Get virtual-network %s: %v", name, err)
