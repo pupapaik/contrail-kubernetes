@@ -58,7 +58,7 @@ func NewController(kube *kubeclient.Client, args []string) network.NetworkContro
 	return controller
 }
 
-func setupAuthKeystone(client *contrail.Client, config *network.Config) {
+func setupAuthKeystone(client *contrail.ApiClient, config *network.Config) {
 	keystone := contrail.NewKeystoneClient(
 		config.KeystoneAuthUrl,
 		config.KeystoneTenantName,
@@ -69,7 +69,6 @@ func setupAuthKeystone(client *contrail.Client, config *network.Config) {
 	err := keystone.Authenticate()
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
 	}
 	client.SetAuthenticator(keystone)
 }
