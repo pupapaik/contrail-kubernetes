@@ -70,6 +70,14 @@ type Config struct {
 
 	// Tenant-specific service networks that are automatically attached to tenant networks
 	NamespaceServices []string `gcfg:"namespace-service"`
+
+	// Keystone
+	KeystoneAuthUrl string `gcfg:"keystone-auth-url"`
+	KeystoneTenantName string `gcfg:"keystone-tenant-name"`
+	KeystoneTenantId string `gcfg:"keystone-tenant-id"`
+	KeystoneUsername string `gcfg:"keystone-username"`
+	KeystonePassword string `gcfg:"keystone-password"`
+	KeystoneToken string `gcfg:"keystone-token"`
 }
 
 func NewConfig() *Config {
@@ -83,6 +91,11 @@ func NewConfig() *Config {
 		ServiceSubnet:        DefaultServiceSubnet,
 		NetworkTag:           "opencontrail.org/name",
 		NetworkAccessTag:     "opencontrail.org/services",
+		KeystoneAuthUrl:      "http://localhost:5000",
+		KeystoneTenantName:   "admin",
+		KeystoneUsername:     "admin",
+		KeystonePassword:     "password",
+		KeystoneToken:        "token",
 		GlobalConnectInclude: ".*",
 		NamespaceServices:    []string{DefaultServiceNetworkName},
 	}

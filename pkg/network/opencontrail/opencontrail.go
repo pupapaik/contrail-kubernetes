@@ -19,6 +19,8 @@ package opencontrail
 import (
 	"io"
 	"time"
+	"fmt"
+	"os"
 
 	"github.com/golang/glog"
 
@@ -74,8 +76,24 @@ func NewController(kube *kubeclient.Client, args []string) network.NetworkContro
 	return controller
 }
 
-func (c *Controller) initComponents(client contrail.ApiClient) {
+func setupAuthKeystone(client *contrail.Client, config *Config) {
+	keystone := contrail.NewKeystoneClient(
+		config.KeystoneAuthUrl,
+		config.KeystoneTenantName,
+		config.KeystoneUsername,
+		config.KeystonePassword,
+		config.KeystoneToken,
+	)
+	err := keystone.Authenticate()
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+	}
+	client.SetAuthenticator(keystone)
+}
+
+func (c *Controller) initComponents(client contrail.ApiClient, cclient *contrail.Client) {
 	c.client = client
+	setupAuthKeystone(cclient, c.config)
 	c.allocator = NewAddressAllocator(client, c.config)
 	c.instanceMgr = NewInstanceManager(client, c.config, c.allocator)
 	c.networkMgr = NewNetworkManager(client, c.config)
@@ -94,7 +112,7 @@ func (c *Controller) Init(global *network.Config, reader io.Reader) error {
 	glog.Infof("Services Subnet: %s", c.config.ServiceSubnet)
 	glog.Infof("Public Subnet:   %s", c.config.PublicSubnet)
 
-	client := contrail.NewClient(c.config.ApiAddress, c.config.ApiPort)
+	client := contrail.NewClient(c.config.ApiAddress, c.config.ApiPort, c.config.auth)
 	c.initComponents(client)
 	c.consistencyPeriod = time.Duration(1) * time.Minute
 
